@@ -1,0 +1,21 @@
+{
+  "name": "projeto_05_api_controle_de_missoes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "check": "node --check src/index.js && node --check src/config/database.js && node --check src/modules/missao/models/missao.model.js && node --check src/modules/missao/controllers/missao.controller.js && node --check src/modules/missao/routers/missao.router.js"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "node": "^26.5.0",
+    "pg": "^8.22.0"
+  }
+}

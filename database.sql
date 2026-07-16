@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS missao (
+    codigo VARCHAR(50) PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL,
+    local VARCHAR(150) NOT NULL,
+    status VARCHAR(50) NOT NULL
+);
