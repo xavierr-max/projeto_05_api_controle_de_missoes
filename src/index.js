@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 import router from './modules/missao/routers/missao.router.js';
 import createTable from './config/table.js';
 
-createTable(); // Chama a função para criar a tabela de missões
-
 dotenv.config();
+
+await createTable();
 
 const app = express();
 

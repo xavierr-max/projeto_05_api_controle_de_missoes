@@ -39,6 +39,10 @@ FRONTEND_URL=https://frontend-adicional.exemplo.com
 
 O frontend local, o domínio oficial da Vercel e os previews desse projeto já são permitidos pelo código.
 
+## Inicialização do banco
+
+Antes de iniciar o servidor HTTP, a API executa uma criação idempotente da tabela `missao` com `CREATE TABLE IF NOT EXISTS`. A inicialização é aguardada, então o serviço não começa a aceitar requisições antes de confirmar o acesso ao PostgreSQL.
+
 ## Rotas
 
 | Método | Rota | Descrição |
@@ -62,6 +66,8 @@ Exemplo de cadastro:
   "status": "Planejada"
 }
 ```
+
+O frontend usa `GET /missoes/listar/:codigo` para carregar a página exclusiva de edição e `PUT /missoes/editar/total/:codigo` para salvar título, local e status.
 
 ## Comandos
 

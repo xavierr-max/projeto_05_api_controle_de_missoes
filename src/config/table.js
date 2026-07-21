@@ -3,15 +3,16 @@ import pool from './database.js';
 const createTable = async () => {
     try {
         await pool.query(`
-           CREATE TABLE missao (
-            codigo VARCHAR(20) PRIMARY KEY,
-            titulo VARCHAR(100) NOT NULL,
-            local VARCHAR(100) NOT NULL,
-            status VARCHAR(30) NOT NULL
+           CREATE TABLE IF NOT EXISTS missao (
+            codigo VARCHAR(50) PRIMARY KEY,
+            titulo VARCHAR(150) NOT NULL,
+            local VARCHAR(150) NOT NULL,
+            status VARCHAR(50) NOT NULL
             );
         `);
     } catch (error) {
         console.error("Erro ao criar tabela de missões:", error);
+        throw error;
     }
 };
 
