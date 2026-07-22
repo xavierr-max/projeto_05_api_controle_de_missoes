@@ -13,7 +13,10 @@ class MissaoController {
 
     static async buscarMissaoPorCodigo(req, res) {
         try {
-            const missao = await MissaoModel.buscarMissaoPorCodigo(req.params.codigo);
+            // aqui foi modificado para descontrucao do js
+            const { codigo } = req.params;
+
+            const missao = await MissaoModel.buscarMissaoPorCodigo(codigo);
 
             if (!missao) {
                 return res.status(404).json({ mensagem: "Missão não encontrada." });
