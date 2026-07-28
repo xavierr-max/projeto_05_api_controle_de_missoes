@@ -30,31 +30,38 @@ PGPASSWORD=senha
 PGPORT=5432
 PORT=3000
 FRONTEND_URL=https://frontend-adicional.exemplo.com
+JWT_SECRET=uma-chave-secreta-forte
+JWT_TEMPO_EXPIRACAO=1h
 ```
 
 - `PGUSER`, `PGHOST`, `PGDATABASE`, `PGPASSWORD` e `PGPORT`: dados de conexão com o PostgreSQL.
 - `PORT`: porta fornecida pelo Render; localmente o padrão é `3000`.
 - `PORTA`: alternativa mantida para compatibilidade local.
 - `FRONTEND_URL`: origens adicionais permitidas pelo CORS, separadas por vírgula.
+- `JWT_SECRET`: chave usada para assinar e validar os tokens de autenticação.
+- `JWT_TEMPO_EXPIRACAO`: duração dos tokens JWT, por exemplo `1h`.
 
 O frontend local, o domínio oficial da Vercel e os previews desse projeto já são permitidos pelo código.
 
 ## Inicialização do banco
 
-Antes de iniciar o servidor HTTP, a API executa uma criação idempotente da tabela `missao` com `CREATE TABLE IF NOT EXISTS`. A inicialização é aguardada, então o serviço não começa a aceitar requisições antes de confirmar o acesso ao PostgreSQL.
+Antes de iniciar o servidor HTTP, a API executa a criação idempotente das tabelas `missao` e `admins` com `CREATE TABLE IF NOT EXISTS`. A inicialização é aguardada, então o serviço não começa a aceitar requisições antes de confirmar o acesso ao PostgreSQL.
 
 ## Rotas
 
 | Método | Rota | Descrição |
 |---|---|---|
 | GET | `/` | Verifica o estado da API |
-| GET | `/missoes/listar` | Lista todas as missões |
-| GET | `/missoes/listar/:codigo` | Busca uma missão |
-| POST | `/missoes/cadastrar` | Cadastra uma missão |
-| PUT | `/missoes/editar/total/:codigo` | Substitui os campos editáveis |
-| PATCH | `/missoes/editar/parcial/:codigo` | Atualiza campos específicos |
-| DELETE | `/missoes/excluir/:codigo` | Exclui uma missão |
-| DELETE | `/missoes/excluir/todos` | Exclui todas as missões |
+| POST | `/admin/cadastrar` | Cadastra o primeiro administrador |
+| POST | `/admin/login` | Autentica o administrador e retorna um token |
+| GET | `/admin/perfil` | Retorna o perfil associado ao token |
+| GET | `/aluno/missoes/listar` | Lista todas as missões |
+| GET | `/aluno/missoes/listar/:codigo` | Busca uma missão |
+| POST | `/aluno/missoes/cadastrar` | Cadastra uma missão (autenticada) |
+| PUT | `/aluno/missoes/editar/total/:codigo` | Substitui os campos editáveis (autenticada) |
+| PATCH | `/aluno/missoes/editar/parcial/:codigo` | Atualiza campos específicos (autenticada) |
+| DELETE | `/aluno/missoes/excluir/:codigo` | Exclui uma missão (autenticada) |
+| DELETE | `/aluno/missoes/excluir/todos` | Exclui todas as missões (autenticada) |
 
 Exemplo de cadastro:
 
@@ -67,7 +74,7 @@ Exemplo de cadastro:
 }
 ```
 
-O frontend usa `GET /missoes/listar/:codigo` para carregar a página exclusiva de edição e `PUT /missoes/editar/total/:codigo` para salvar título, local e status.
+Envie o token nas rotas autenticadas com o cabeçalho `Authorization: Bearer <token>`.
 
 ## Comandos
 

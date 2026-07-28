@@ -53,8 +53,8 @@ app.get('/', (req, res) => {
     res.status(200).json(healthCheck);
 });
 
-app.use(router);
-app.use(adminRouter);
+app.use("/aluno", router);
+app.use("/admin", adminRouter);
 
 app.use((req, res) => {
     res.status(404).json({ mensagem: 'Rota não encontrada.' });
