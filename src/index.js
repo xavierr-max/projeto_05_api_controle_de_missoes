@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import router from './modules/missao/routers/missao.router.js';
+import adminRouter from './modules/admin/routers/admin.route.js';
 import createTable from './config/table.js';
 
 dotenv.config();
@@ -53,6 +54,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(router);
+app.use(adminRouter);
 
 app.use((req, res) => {
     res.status(404).json({ mensagem: 'Rota não encontrada.' });

@@ -58,14 +58,14 @@ class AdminController {
                 return res.status(401).json({ mensagem: "Credenciais inválidas" });
 
             const token = jwt.sign(
-                {
-                    id: admin.id,
+                {  // payload
+                    id: admin.id, // claims
                     nome: admin.nome,
                     email: admin.email
                 },
-                process.env.JWT_SECRET,
+                process.env.JWT_SECRET, // secret key
                 {
-                    expiresIn: process.env.JWT_TEMPO_EXPIRACAO
+                    expiresIn: process.env.JWT_TEMPO_EXPIRACAO // tempo de expiração
                 }
             );
 
@@ -78,6 +78,41 @@ class AdminController {
         } catch (error) {
             console.error(error);
             return res.status(500).json({ mensagem: "Erro ao realizar login" });
+        }
+    }
+
+    static async perfil(req, res) {
+        try {
+            const authorization = req.headers.authorization;
+
+            if (!authorization?.startsWith("Bearer ")) {
+                return res.status(401).json({ mensagem: "Token não informado" });
+            }
+
+            const token = authorization.slice(7).trim();
+
+            if (!token) {
+                return res.status(401).json({ mensagem: "Token não informado" });
+            }
+
+            let usuario;
+
+            try {
+                usuario = jwt.verify(token, process.env.JWT_SECRET);
+            } catch (error) {
+                return res.status(401).json({ mensagem: "Token inválido ou expirado" });
+            }
+
+            const admin = await AdminModel.buscarPorId(usuario.id);
+
+            if (!admin) {
+                return res.status(404).json({ mensagem: "Usuário não encontrado" });
+            }
+
+            return res.status(200).json(admin);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ mensagem: "Erro ao buscar perfil" });
         }
     }
 }

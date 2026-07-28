@@ -25,6 +25,13 @@ class AdminModel {
         return resultado.rows[0];
     }
 
+    static async buscarPorId(id) {
+        const query = `SELECT id, nome, email FROM admins WHERE id = $1`;
+
+        const resultado = await pool.query(query, [id]);
+        return resultado.rows[0];
+    }
+
 }
 
 export default AdminModel;
