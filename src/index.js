@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-const port = process.env.PORT || process.env.PORTA || 3000;
+const port = process.env.PORT;
 
 app.get('/', (req, res) => {
     const healthCheck = {
@@ -53,7 +53,7 @@ app.get('/', (req, res) => {
     res.status(200).json(healthCheck);
 });
 
-app.use("/aluno", router);
+app.use(router);
 app.use("/admin", adminRouter);
 
 app.use((req, res) => {

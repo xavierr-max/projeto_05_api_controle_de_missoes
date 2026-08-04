@@ -11,11 +11,21 @@ const createTable = async () => {
             );
 
             CREATE TABLE IF NOT EXISTS admins (
-                id VARCHAR(50) PRIMARY KEY,
-                nome VARCHAR(150) NOT NULL,
+                id VARCHAR(50) PRIMARY KEY DEFAULT gen_random_uuid()::text,
+                nome VARCHAR(150),
                 email VARCHAR(255) UNIQUE NOT NULL,
-                senha VARCHAR(255) NOT NULL
+                senha VARCHAR(255) NOT NULL,
+                ativo BOOLEAN NOT NULL DEFAULT TRUE
             );
+
+            ALTER TABLE admins
+                ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT TRUE;
+
+            ALTER TABLE admins
+                ALTER COLUMN id SET DEFAULT gen_random_uuid()::text,
+                ALTER COLUMN nome DROP NOT NULL,
+                ALTER COLUMN ativo SET DEFAULT TRUE,
+                ALTER COLUMN ativo SET NOT NULL;
         `);
     } catch (error) {
         console.error("Erro ao criar tabela de missões:", error);

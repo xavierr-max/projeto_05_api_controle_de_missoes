@@ -7,10 +7,10 @@ const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S{8,32}$/;
 class AdminController {
     static async cadastrar(req, res) {
         try {
-            const { id, nome, email, senha } = req.body;
+            const { nome, email, senha } = req.body;
 
-            if (!id || !nome || !email || !senha) {
-                return res.status(400).json({ mensagem: "Todos os campos são obrigatórios" });
+            if (!email || !senha) {
+                return res.status(400).json({ mensagem: "Email e senha são obrigatórios" });
             }
 
             if (!regex.test(senha)) {
@@ -19,16 +19,25 @@ class AdminController {
                 });
             }
 
-            const totalAdmin = await AdminModel.contarAdmins();
+            const totalAdmin = await AdminModel.adminAtivos();
             if (totalAdmin >= 1) {
                 return res.status(409).json({ mensagem: "Administrador já existe" });
+            }
+
+            if (totalAdmin.ativo === false)
+            {
+                return res.status(403).json({ mensagem: "Administrador inativo" });
             }
 
             //const salt = bcrypt.genSaltSync(10);
             //const hashSenha = bcrypt.hashSync(senha, salt);
             const senhaHash = await bcrypt.hash(senha, 10);
 
-            const admin = await AdminModel.cadastrar({ id, nome, email, senha: senhaHash });
+            const admin = await AdminModel.cadastrar({
+                nome: nome || null,
+                email,
+                senha: senhaHash
+            });
 
             // ":" é utilizado para atrubuição "=" para objetos em js
             return res.status(201).json({
@@ -52,6 +61,9 @@ class AdminController {
             const admin = await AdminModel.buscarPorEmail(email);
             if (!admin)
                 return res.status(401).json({ mensagem: "Credenciais inválidas" });
+
+            if (!admin.ativo)
+                return res.status(403).json({ mensagem: "Administrador inativo" });
 
             const senhaValida = await bcrypt.compare(senha, admin.senha);
             if (!senhaValida)
