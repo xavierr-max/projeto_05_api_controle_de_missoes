@@ -95,27 +95,7 @@ class AdminController {
 
     static async perfil(req, res) {
         try {
-            const authorization = req.headers.authorization;
-
-            if (!authorization?.startsWith("Bearer ")) {
-                return res.status(401).json({ mensagem: "Token não informado" });
-            }
-
-            const token = authorization.slice(7).trim();
-
-            if (!token) {
-                return res.status(401).json({ mensagem: "Token não informado" });
-            }
-
-            let usuario;
-
-            try {
-                usuario = jwt.verify(token, process.env.JWT_SECRET);
-            } catch (error) {
-                return res.status(401).json({ mensagem: "Token inválido ou expirado" });
-            }
-
-            const admin = await AdminModel.buscarPorId(usuario.id);
+            const admin = await AdminModel.buscarPorId(req.user.id);
 
             if (!admin) {
                 return res.status(404).json({ mensagem: "Usuário não encontrado" });

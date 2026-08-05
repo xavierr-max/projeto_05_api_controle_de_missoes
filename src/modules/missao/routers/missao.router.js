@@ -5,8 +5,8 @@ import AutenticacaoMiddleware from "../../admin/middleware/autenticacao.middlewa
 const router = express.Router();
 
 router.post("/missoes/cadastrar", AutenticacaoMiddleware.autenticar, MissaoController.cadastrarMissao);
-router.get("/missoes/listar", MissaoController.listarMissoes);
-router.get("/missoes/listar/:codigo", MissaoController.buscarMissaoPorCodigo);
+router.get("/missoes/listar", AutenticacaoMiddleware.autenticar, MissaoController.listarMissoes);
+router.get("/missoes/listar/:codigo", AutenticacaoMiddleware.autenticar, MissaoController.buscarMissaoPorCodigo);
 router.put("/missoes/editar/total/:codigo", AutenticacaoMiddleware.autenticar, MissaoController.atualizarMissaoTotal);
 router.patch("/missoes/editar/parcial/:codigo", AutenticacaoMiddleware.autenticar, MissaoController.atualizarMissaoParcial);
 router.delete("/missoes/excluir/todos", AutenticacaoMiddleware.autenticar, MissaoController.excluirTodasMissoes);
